@@ -1,0 +1,74 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13.2
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: app
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./.data:/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - 3000:3000
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: example
+      DB_HOST: db
+      NODE_ENV: dev
+      PORT: 3000
+      SECRET: adrfgqgrth23554y564 
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    entrypoint:
+      - sh
+      - -c
+      - "./bin/wait-for-it.sh db:5432 -s -t 600 -- sleep 1 && node seed.js && ./node_modules/.bin/nodemon ./bin/www"
+
+  notification:
+    build:
+      context: ./notification
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - 8081:8081
+    environment:
+      MONGODB_ADMINUSERNAME: root
+      MONGODB_ADMINPASSWORD: example
+      MONGODB_HOST: db
+      PORT: 8081
+      SECRET: adrfgqgrth23554y564 
+    volumes:
+      - ./notification:/app
+      - /app/node_modules
+    entrypoint:
+      - sh
+      - -c
+      - "./bin/wait-for-it.sh db:27017 -s -t 600 -- sleep 1 && ./node_modules/.bin/nodemon app.js"
+
+  client:
+    build:
+      context: ./client
+      dockerfile: dev.Dockerfile
+    working_dir: /app
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    stdin_open: true
+    entrypoint:
+      - sh
+      - -c
+      - "npm start"
