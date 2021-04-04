@@ -27,7 +27,6 @@ services:
       DB_HOST: db
       NODE_ENV: dev
       PORT: 3000
-      SECRET: adrfgqgrth23554y564 
     volumes:
       - ./api:/app
       - /app/node_modules
