@@ -1,4 +1,4 @@
-import { RouteOptions } from 'fastify';
+import { RouteOptions } from "fastify";
 
 interface Router {
   path?: string;

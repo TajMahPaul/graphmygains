@@ -1,12 +1,12 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import boom from 'boom';
+import { FastifyRequest, FastifyReply } from "fastify";
+import boom from "boom";
 
 class IndexController {
   public index = (req: FastifyRequest, rep: FastifyReply): void => {
     try {
-        rep.status(200).send();
+      rep.status(200).send({ result: "Healthy" });
     } catch (error) {
-        throw boom.boomify(error);
+      throw boom.boomify(error);
     }
   };
 }

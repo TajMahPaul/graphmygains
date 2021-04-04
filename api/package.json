@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "API for the graphmygains",
   "scripts": {
-    "dev": "./node_modules/.bin/nodemon"
+    "dev": "./node_modules/.bin/nodemon",
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/; exit 0",
+    "lint:fix": "eslint --ignore-path .gitignore --fix --ext .ts src/; exit 0"
   },
   "author": "",
   "license": "ISC",
